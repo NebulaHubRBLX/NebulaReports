@@ -1,275 +1,470 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>nUNC | Nebula's Unified Naming Convention</title>
-<link rel="icon" href="https://dirtyw0rk.neocities.org/N.png">
-<style>
-:root {
-    --bg: #000;
-    --accent: #ff1a1a;
-    --accent-glow: 0 0 15px #ff1a1a80;
-    --text: #f5f5f5;
-    --muted: #999;
-    --card: #0d0d0d;
-    --border: #1f1f1f;
-    --font-main: "Inter", "Segoe UI", Roboto, sans-serif;
-    --font-mono: "JetBrains Mono", monospace;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nUNC | Nebula's Unified Naming Convention</title>
+    <link rel="icon" href="https://dirtyw0rk.neocities.org/N.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg: #000000;
+            --accent: #ff0000;
+            --accent-glow: rgba(255, 0, 0, 0.3);
+            --text: #ffffff;
+            --text-secondary: #a0a0a0;
+            --secondary: #0a0a0a;
+            --border: #1a1a1a;
+            --card-bg: #080808;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        /* Animated background gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, var(--accent-glow) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, var(--accent-glow) 0%, transparent 50%);
+            opacity: 0.15;
+            animation: pulse 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-main);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 3rem 1rem;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.2; }
+        }
 
-header {
-    text-align: center;
-    margin-bottom: 4rem;
-}
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header */
+        header {
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            animation: fadeInDown 0.8s ease-out;
+        }
 
-.logo {
-    width: 120px;
-    filter: drop-shadow(0 0 20px rgba(255,0,0,0.5));
-    transition: transform .3s ease;
-}
-.logo:hover {
-    transform: scale(1.05);
-}
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px var(--accent-glow));
+            transition: transform 0.3s ease;
+        }
 
-h1 {
-    margin-top: 1rem;
-    font-size: 1.8rem;
-    letter-spacing: 1px;
-    color: var(--text);
-    text-transform: uppercase;
-}
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text) 0%, var(--text-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-nav {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-}
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 2rem;
+        }
+        
+        /* Navigation */
+        nav {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
 
-nav a {
-    position: relative;
-    color: var(--text);
-    text-decoration: none;
-    font-size: 1rem;
-    opacity: 0.85;
-    transition: color .2s ease, opacity .2s ease;
-}
-nav a:hover {
-    opacity: 1;
-    color: var(--accent);
-}
-nav a::after {
-    content: "";
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background: var(--accent);
-    transition: width .3s ease;
-}
-nav a:hover::after {
-    width: 100%;
-}
+        nav a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transform: translateX(-50%);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: var(--text);
+            background: var(--secondary);
+        }
 
-main {
-    width: 100%;
-    max-width: 900px;
-}
+        nav a:hover::before {
+            width: 80%;
+        }
+        
+        /* Main content */
+        main {
+            padding: 4rem 0;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
 
-section {
-    margin-bottom: 4rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.05);
-    transition: box-shadow .3s ease, transform .2s ease;
-}
-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.15);
-}
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        section {
+            margin-bottom: 4rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            position: relative;
+            display: inline-block;
+        }
 
-h2 {
-    color: var(--accent);
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    text-shadow: 0 0 10px rgba(255,0,0,0.3);
-}
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+        
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+        
+        /* Code blocks */
+        code, pre {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
 
-p {
-    color: var(--text);
-    opacity: 0.9;
-    margin-bottom: 1rem;
-}
+        code {
+            padding: 0.2rem 0.6rem;
+            color: var(--accent);
+        }
+        
+        pre {
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
 
-pre, code {
-    background: #111;
-    color: #f8f8f8;
-    font-family: var(--font-mono);
-    border-radius: 6px;
-}
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            color: var(--text);
+        }
 
-pre {
-    padding: 1rem;
-    font-size: 0.95rem;
-    border: 1px solid var(--border);
-    overflow-x: auto;
-}
+        pre::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+        
+        /* Reports section */
+        #reports-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .report-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-ul {
-    list-style: none;
-}
+        .report-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
 
-.report-item {
-    background: #111;
-    padding: 1rem;
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    transition: background .2s ease, transform .2s ease;
-}
-.report-item:hover {
-    background: #161616;
-    transform: translateX(3px);
-}
+        .report-item:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .report-item:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 4px 30px rgba(255, 0, 0, 0.1);
+        }
+        
+        .report-link {
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
 
-.report-link {
-    color: var(--text);
-    text-decoration: none;
-    display: block;
-    font-weight: 500;
-}
-.report-link:hover {
-    color: var(--accent);
-}
+        .report-link::after {
+            content: '→';
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+            color: var(--accent);
+        }
 
-#report-details {
-    display: none;
-    margin-top: 2rem;
-    background: #111;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1.5rem;
-}
+        .report-item:hover .report-link::after {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        #report-details {
+            display: none;
+            margin-top: 2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            border-radius: 12px;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+        }
 
-footer {
-    margin-top: 4rem;
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.85rem;
-}
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-.thumbnail {
-    margin-top: 1rem;
-    width: 280px;
-    opacity: 0.8;
-    transition: opacity .2s ease;
-}
-.thumbnail:hover {
-    opacity: 1;
-}
-hr {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 3rem 0;
-}
-</style>
+        #report-details h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        #report-content {
+            background: var(--secondary);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Scrollbar */
+        #report-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #report-content::-webkit-scrollbar-track {
+            background: var(--card-bg);
+        }
+
+        #report-content::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .thumbnail {
+            width: 300px;
+            max-width: 100%;
+            margin-top: 2rem;
+            opacity: 0.7;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .thumbnail:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<header>
-    <img src="https://dirtyw0rk.neocities.org/N.png" alt="nUNC Logo" class="logo">
-    <h1>nUNC | Nebula's Unified Naming Convention</h1>
-    <nav>
-        <a href="/">Home</a>
-        <a href="https://github.com/unified-naming-convention/NamingStandard">Docs</a>
-        <a href="https://github.com/">GitHub</a>
-        <a href="https://discord.gg/EujYNsM3">Discord</a>
-    </nav>
-</header>
-
-<main>
-    <section id="intro">
-        <h2>It's time for real standards.</h2>
-        <p>nUNC is a refined tool for testing executor compliance with the Unified Naming Convention. View detailed reports and verify legitimacy with precision.</p>
-        <p>Run the test using:</p>
-        <pre><code>getgenv().nUNCDebug = true
+    <div class="container">
+        <header>
+            <img src="https://dirtyw0rk.neocities.org/N.png" alt="nUNC Logo" class="logo">
+            <h1>nUNC</h1>
+            <p class="subtitle">Nebula's Unified Naming Convention</p>
+            <nav>
+                <a href="/">Home</a>
+                <a href="https://github.com/unified-naming-convention/NamingStandard">Docs</a>
+                <a href="https://github.com/">GitHub</a>
+                <a href="https://discord.gg/EujYNsM3">Discord</a>
+            </nav>
+        </header>
+        
+        <main>
+            <section id="intro">
+                <h2>It's time for real standards.</h2>
+                <p>nUNC is a polished tool for testing executor compliance with the Unified Naming Convention. Features include detailed reports and secure verification.</p>
+                <p>Run the test with this script:</p>
+                <pre><code>getgenv().nUNCDebug = true
 loadstring(game:HttpGet("your-script-url"))()</code></pre>
-        <p>Join our Discord for help, news, and updates.</p>
-    </section>
+                <p>Join our Discord for support and updates.</p>
+            </section>
+            
+            <section id="reports">
+                <h2>Recent Reports</h2>
+                <ul id="reports-list"></ul>
+                <div id="report-details">
+                    <h3>Report Details</h3>
+                    <pre id="report-content"></pre>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 nUNC - Based on Official UNC Standard</p>
+            <img src="https://dirtyw0rk.neocities.org/Dont%20Spoof%20it,%20Prove%20it.%20(1).png" alt="Thumbnail" class="thumbnail">
+        </footer>
+    </div>
+    
+    <script>
+        async function loadReports() {
+            const response = await fetch('/reports');
+            const reports = await response.json();
+            const list = document.getElementById('reports-list');
+            list.innerHTML = '';
+            reports.forEach(report => {
+                const li = document.createElement('li');
+                li.className = 'report-item';
+                const a = document.createElement('a');
+                a.className = 'report-link';
+                a.href = `#${report.id}`;
+                a.textContent = `NEBULA-${report.id} (${report.executor})`;
+                a.onclick = (e) => {
+                    e.preventDefault();
+                    loadReport(report.id);
+                };
+                li.appendChild(a);
+                list.appendChild(li);
+            });
+        }
 
-    <section id="reports">
-        <h2>Recent Reports</h2>
-        <ul id="reports-list"></ul>
-        <div id="report-details">
-            <h3>Report Details</h3>
-            <pre id="report-content"></pre>
-        </div>
-    </section>
-</main>
+        async function loadReport(id) {
+            const response = await fetch(`/report/${id}`);
+            const data = await response.json();
+            const details = document.getElementById('report-details');
+            const content = document.getElementById('report-content');
+            content.textContent = JSON.stringify(data, null, 2);
+            details.style.display = 'block';
+        }
 
-<hr>
-
-<footer>
-    <p>&copy; 2025 nUNC - Based on Official UNC Standard</p>
-    <img src="https://dirtyw0rk.neocities.org/Dont%20Spoof%20it,%20Prove%20it.%20(1).png" alt="Thumbnail" class="thumbnail">
-</footer>
-
-<script>
-async function loadReports() {
-    const response = await fetch('/reports');
-    const reports = await response.json();
-    const list = document.getElementById('reports-list');
-    list.innerHTML = '';
-    reports.forEach(report => {
-        const li = document.createElement('li');
-        li.className = 'report-item';
-        const a = document.createElement('a');
-        a.className = 'report-link';
-        a.href = `#${report.id}`;
-        a.textContent = `NEBULA-${report.id} (${report.executor})`;
-        a.onclick = e => {
-            e.preventDefault();
-            loadReport(report.id);
-        };
-        li.appendChild(a);
-        list.appendChild(li);
-    });
-}
-
-async function loadReport(id) {
-    const response = await fetch(`/report/${id}`);
-    const data = await response.json();
-    const details = document.getElementById('report-details');
-    const content = document.getElementById('report-content');
-    content.textContent = JSON.stringify(data, null, 2);
-    details.style.display = 'block';
-}
-
-window.onload = loadReports;
-</script>
+        window.onload = loadReports;
+    </script>
 </body>
 </html>
