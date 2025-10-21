@@ -564,60 +564,224 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
     </div>
 
     <script>
-        function copyCode() {
-            const code = document.getElementById('script-code').textContent;
-            navigator.clipboard.writeText(code).then(() => {
-                const btn = document.querySelector('.copy-btn');
-                btn.textContent = 'Copied!';
-                setTimeout(() => {
-                    btn.textContent = 'Copy';
-                }, 2000);
-            });
-        }
+function copyCode() {
+    const code = document.getElementById('script-code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+        }, 2000);
+    });
+}
 
-        async function loadReports() {
-            try {
-                const response = await fetch('/reports');
-                const reports = await response.json();
-                const list = document.getElementById('reports-list');
-                list.innerHTML = '';
-                reports.forEach(report => {
-                    const li = document.createElement('li');
-                    li.className = 'report-item';
-                    const a = document.createElement('a');
-                    a.className = 'report-link';
-                    a.href = `#${report.id}`;
-                    a.innerHTML = `NEBULA-${report.id} <span>${report.executor}</span>`;
-                    a.onclick = (e) => {
-                        e.preventDefault();
-                        loadReport(report.id);
-                    };
-                    li.appendChild(a);
-                    list.appendChild(li);
-                });
-            } catch (error) {
-                console.log('Reports not available');
-            }
-        }
+// Generate random ID (8-character alphanumeric)
+function generateRandomId() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
 
-async function loadReport(id) {
-    try {
-        const response = await fetch(`/report/${id}/json`);
-        const data = await response.json();
-        const details = document.getElementById('report-details');
-        const content = document.getElementById('report-content');
-        content.textContent = JSON.stringify(data, null, 2);
-        details.style.display = 'block';
-        details.scrollIntoView({ behavior: 'smooth' });
-    } catch (error) {
-        console.error('Failed to load report:', error);
+// Format date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Determine status based on test results
+function getTestStatus(reportData) {
+    if (!reportData.results) return 'pending';
+    
+    const passed = reportData.results.passed || 0;
+    const total = reportData.results.total || 0;
+    
+    if (total === 0) return 'pending';
+    if (passed === total) return 'completed';
+    if (passed === 0) return 'failed';
+    return 'pending';
+}
+
+// Create report card
+function createReportCard(report) {
+    const card = document.createElement('div');
+    card.className = 'report-card';
+    card.onclick = () => openReportModal(report);
+    
+    const status = getTestStatus(report.data);
+    const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+    
+    card.innerHTML = `
+        <div class="report-header">
+            <div class="report-id">NEBULA-${report.id}</div>
+            <div class="report-date">${formatDate(report.createdAt)}</div>
+        </div>
+        <div class="report-executor">${report.executor.name}</div>
+        <div class="report-meta">
+            <div class="meta-item">
+                <span class="meta-label">Tests</span>
+                <span class="meta-value">${report.data.results?.total || 0} total</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Passed</span>
+                <span class="meta-value">${report.data.results?.passed || 0}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Status</span>
+                <span class="status-badge status-${status}">${statusText}</span>
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Open report modal
+function openReportModal(report) {
+    const modal = document.getElementById('report-modal');
+    const status = getTestStatus(report.data);
+    const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+    
+    // Set modal content
+    document.getElementById('modal-title').textContent = `Report NEBULA-${report.id}`;
+    document.getElementById('modal-id').textContent = report.id;
+    document.getElementById('modal-executor').textContent = report.executor.name;
+    document.getElementById('modal-date').textContent = formatDate(report.createdAt);
+    document.getElementById('modal-status').textContent = statusText;
+    document.getElementById('modal-status').className = `status-badge status-${status}`;
+    
+    // Set test results
+    const resultsGrid = document.getElementById('results-grid');
+    if (report.data.results) {
+        resultsGrid.innerHTML = `
+            <div class="result-item">
+                <div class="result-name">Total Tests</div>
+                <div class="result-value">${report.data.results.total || 0}</div>
+            </div>
+            <div class="result-item">
+                <div class="result-name">Passed</div>
+                <div class="result-value result-pass">${report.data.results.passed || 0}</div>
+            </div>
+            <div class="result-item">
+                <div class="result-name">Failed</div>
+                <div class="result-value result-fail">${report.data.results.failed || 0}</div>
+            </div>
+            <div class="result-item">
+                <div class="result-name">Success Rate</div>
+                <div class="result-value ${(report.data.results.passed / report.data.results.total) >= 0.8 ? 'result-pass' : 'result-warning'}">
+                    ${report.data.results.total ? Math.round((report.data.results.passed / report.data.results.total) * 100) : 0}%
+                </div>
+            </div>
+        `;
+    } else {
+        resultsGrid.innerHTML = '<div class="result-item"><div class="result-name">No test data available</div></div>';
+    }
+    
+    // Set raw data
+    document.getElementById('modal-raw-data').textContent = JSON.stringify(report.data, null, 2);
+    
+    // Show modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+// Close modal
+function closeModal() {
+    const modal = document.getElementById('report-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Filter and search reports
+function filterReports() {
+    const searchTerm = document.getElementById('search-reports').value.toLowerCase();
+    const executorFilter = document.getElementById('executor-filter').value;
+    const reportsGrid = document.getElementById('reports-grid');
+    const emptyState = document.getElementById('empty-state');
+    
+    const filteredReports = window.allReports.filter(report => {
+        const matchesSearch = report.id.toLowerCase().includes(searchTerm) || 
+                            report.executor.name.toLowerCase().includes(searchTerm);
+        const matchesExecutor = !executorFilter || report.executor.name === executorFilter;
+        return matchesSearch && matchesExecutor;
+    });
+    
+    reportsGrid.innerHTML = '';
+    
+    if (filteredReports.length === 0) {
+        emptyState.style.display = 'block';
+    } else {
+        emptyState.style.display = 'none';
+        filteredReports.forEach(report => {
+            reportsGrid.appendChild(createReportCard(report));
+        });
     }
 }
 
-        window.onload = loadReports;
+// Load reports
+async function loadReports() {
+    const loadingState = document.getElementById('loading-state');
+    const reportsGrid = document.getElementById('reports-grid');
+    const emptyState = document.getElementById('empty-state');
+    
+    try {
+        loadingState.style.display = 'block';
+        reportsGrid.innerHTML = '';
+        emptyState.style.display = 'none';
+        
+        const response = await fetch('/reports');
+        const reports = await response.json();
+        
+        // Store all reports for filtering
+        window.allReports = reports;
+        
+        loadingState.style.display = 'none';
+        
+        if (reports.length === 0) {
+            emptyState.style.display = 'block';
+        } else {
+            reports.forEach(report => {
+                reportsGrid.appendChild(createReportCard(report));
+            });
+        }
+    } catch (error) {
+        console.log('Reports not available');
+        loadingState.style.display = 'none';
+        emptyState.style.display = 'block';
+    }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadReports();
+    
+    // Search and filter
+    document.getElementById('search-reports').addEventListener('input', filterReports);
+    document.getElementById('executor-filter').addEventListener('change', filterReports);
+    
+    // Modal close
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('report-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+    
+    // Escape key to close modal
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+});
     </script>
 </body>
 </html>
+
 
 
 
