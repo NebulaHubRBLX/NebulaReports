@@ -99,6 +99,28 @@ app.post('/report', async (req, res) => {
     }
 });
 
+// GET /report/:id (JSON) -> return report data as JSON
+app.get('/report/:id/json', (req, res) => {
+    try {
+        const id = parseInt(req.params.id, 10);
+        
+        if (isNaN(id)) {
+            return res.status(400).json({ error: 'Invalid report ID' });
+        }
+
+        const report = reports.find(r => r.id === id);
+        
+        if (!report) {
+            return res.status(404).json({ error: 'Report not found' });
+        }
+
+        res.json(report);
+    } catch (error) {
+        console.error('Error fetching report:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // GET /reports -> list all reports
 app.get('/reports', (req, res) => {
     try {
