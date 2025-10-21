@@ -6,8 +6,7 @@
     <title>nUNC | Nebula's Unified Naming Convention</title>
     <link rel="icon" href="https://dirtyw0rk.neocities.org/N.png">
     <style>
-
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         * {
             margin: 0;
@@ -21,6 +20,8 @@
             --accent: #ff0000;
             --gray: #6b7280;
             --border: #1f1f1f;
+            --card-bg: #0a0a0a;
+            --hover-bg: #0f0f0f;
         }
         
         body {
@@ -114,7 +115,7 @@
         }
 
         .code-box {
-            background: #0a0a0a;
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 0.75rem;
             padding: 1.5rem;
@@ -150,7 +151,7 @@
         }
 
         .copy-btn:hover {
-            background: #0f0f0f;
+            background: var(--hover-bg);
             color: var(--text);
         }
 
@@ -188,7 +189,7 @@
         }
 
         .feature-card {
-            background: #0a0a0a;
+            background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 0.75rem;
             padding: 2rem;
@@ -206,382 +207,471 @@
             color: var(--gray);
             line-height: 1.6;
         }
-/* Reports Controls */
-.reports-controls {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
 
-.search-box {
-    position: relative;
-    flex: 1;
-    min-width: 250px;
-}
+        /* Reports Section */
+        .reports {
+            padding: 4rem 0 6rem;
+        }
 
-.search-box svg {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--gray);
-}
+        .section-header {
+            margin-bottom: 2rem;
+        }
 
-.search-box input {
-    width: 100%;
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    color: var(--text);
-    font-size: 0.875rem;
-    transition: all 0.2s;
-}
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
 
-.search-box input:focus {
-    outline: none;
-    border-color: #333;
-    background: #0f0f0f;
-}
+        .section-header p {
+            font-size: 1rem;
+            color: var(--gray);
+        }
 
-.filter-select select {
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    color: var(--text);
-    font-size: 0.875rem;
-    min-width: 150px;
-    cursor: pointer;
-}
+        /* Reports Controls */
+        .reports-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
 
-/* Reports Grid */
-.reports-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
 
-.report-card {
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-}
+        .search-box svg {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
 
-.report-card:hover {
-    background: #0f0f0f;
-    border-color: #333;
-    transform: translateY(-2px);
-}
+        .search-box input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
 
-.report-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), #ff6b6b);
-}
+        .search-box input:focus {
+            outline: none;
+            border-color: #333;
+            background: var(--hover-bg);
+        }
 
-.report-header {
-    display: flex;
-    justify-content: between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-}
+        .filter-select select {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            min-width: 150px;
+            cursor: pointer;
+        }
 
-.report-id {
-    font-family: 'SF Mono', Monaco, monospace;
-    font-weight: 700;
-    font-size: 0.875rem;
-    color: var(--accent);
-    background: rgba(255, 0, 0, 0.1);
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-}
+        /* Reports Grid */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-.report-date {
-    font-size: 0.75rem;
-    color: var(--gray);
-}
+        .report-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
 
-.report-executor {
-    font-weight: 600;
-    font-size: 1.125rem;
-    margin-bottom: 0.5rem;
-}
+        .report-card:hover {
+            background: var(--hover-bg);
+            border-color: #333;
+            transform: translateY(-2px);
+        }
 
-.report-meta {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
+        .report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), #ff6b6b);
+        }
 
-.meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
 
-.meta-label {
-    font-size: 0.75rem;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
+        .report-id {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--accent);
+            background: rgba(255, 0, 0, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+        }
 
-.meta-value {
-    font-size: 0.875rem;
-    font-weight: 500;
-}
+        .report-date {
+            font-size: 0.75rem;
+            color: var(--gray);
+        }
 
-.status-badge {
-    padding: 0.25rem 0.75rem;
-    border-radius: 1rem;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
+        .report-executor {
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
 
-.status-completed {
-    background: rgba(34, 197, 94, 0.1);
-    color: #22c55e;
-    border: 1px solid rgba(34, 197, 94, 0.2);
-}
+        .report-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
 
-.status-failed {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-}
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
 
-.status-pending {
-    background: rgba(234, 179, 8, 0.1);
-    color: #eab308;
-    border: 1px solid rgba(234, 179, 8, 0.2);
-}
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-/* Loading and Empty States */
-.loading-state, .empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: var(--gray);
-}
+        .meta-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
 
-.loading-spinner {
-    width: 2rem;
-    height: 2rem;
-    border: 2px solid var(--border);
-    border-top: 2px solid var(--accent);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-}
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+        .status-completed {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
 
-.empty-state svg {
-    margin-bottom: 1rem;
-    color: var(--gray);
-}
+        .status-failed {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
 
-.empty-state h3 {
-    margin-bottom: 0.5rem;
-    color: var(--text);
-}
+        .status-pending {
+            background: rgba(234, 179, 8, 0.1);
+            color: #eab308;
+            border: 1px solid rgba(234, 179, 8, 0.2);
+        }
 
-/* Modal */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(8px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 1rem;
-}
+        /* Loading and Empty States */
+        .loading-state, .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray);
+        }
 
-.modal-content {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 1rem;
-    width: 100%;
-    max-width: 900px;
-    max-height: 90vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
+        .loading-spinner {
+            width: 2rem;
+            height: 2rem;
+            border: 2px solid var(--border);
+            border-top: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
 
-.modal-header {
-    display: flex;
-    justify-content: between;
-    align-items: center;
-    padding: 1.5rem 2rem;
-    border-bottom: 1px solid var(--border);
-}
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-.modal-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
+        .empty-state svg {
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
 
-.modal-close {
-    background: none;
-    border: none;
-    color: var(--gray);
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 0.375rem;
-    transition: all 0.2s;
-}
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
 
-.modal-close:hover {
-    background: #1a1a1a;
-    color: var(--text);
-}
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
 
-.modal-body {
-    padding: 2rem;
-    overflow-y: auto;
-    flex: 1;
-}
+        .modal-content {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-.report-meta {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    background: #0a0a0a;
-    border-radius: 0.75rem;
-    border: 1px solid var(--border);
-}
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
 
-.meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
 
-.meta-label {
-    font-size: 0.75rem;
-    color: var(--gray);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-weight: 600;
-}
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
 
-.meta-value {
-    font-size: 0.875rem;
-    font-weight: 500;
-}
+        .modal-close:hover {
+            background: #1a1a1a;
+            color: var(--text);
+        }
 
-.data-section {
-    margin-bottom: 2rem;
-}
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
 
-.data-section h4 {
-    margin-bottom: 1rem;
-    font-size: 1.125rem;
-    font-weight: 600;
-}
+        .report-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+        }
 
-.results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-}
+        .modal-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-.result-item {
-    background: #0a0a0a;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    padding: 1rem;
-}
+        .modal-meta-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
 
-.result-name {
-    font-size: 0.875rem;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-}
+        .modal-meta-value {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
 
-.result-value {
-    font-size: 1.125rem;
-    font-weight: 700;
-}
+        .data-section {
+            margin-bottom: 2rem;
+        }
 
-.result-pass {
-    color: #22c55e;
-}
+        .data-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
 
-.result-fail {
-    color: #ef4444;
-}
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
 
-.result-warning {
-    color: #eab308;
-}
+        .result-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
 
-.code-container {
-    background: #000;
-    border: 1px solid var(--border);
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
+        .result-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
 
-.code-container pre {
-    margin: 0;
-    padding: 1.5rem;
-    max-height: 300px;
-    overflow: auto;
-}
+        .result-value {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .reports-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .reports-controls {
-        flex-direction: column;
-    }
-    
-    .search-box {
-        min-width: auto;
-    }
-    
-    .modal-content {
-        margin: 1rem;
-    }
-    
-    .modal-body {
-        padding: 1rem;
-    }
-    
-    .report-meta {
-        grid-template-columns: 1fr;
-    }
-}
+        .result-pass {
+            color: #22c55e;
+        }
+
+        .result-fail {
+            color: #ef4444;
+        }
+
+        .result-warning {
+            color: #eab308;
+        }
+
+        .code-container {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .code-container pre {
+            margin: 0;
+            padding: 1.5rem;
+            max-height: 300px;
+            overflow: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 0 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .thumbnail {
+            width: 300px;
+            max-width: 100%;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            margin-top: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reports-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .reports-controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                min-width: auto;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+            }
+            
+            .modal-body {
+                padding: 1rem;
+            }
+            
+            .report-meta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -653,101 +743,102 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
             </div>
         </section>
 
-<section class="reports">
-    <div class="section-header">
-        <h2>Recent Reports</h2>
-        <p>View the latest executor test results</p>
-    </div>
-    
-    <!-- Search and Filter Bar -->
-    <div class="reports-controls">
-        <div class="search-box">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.3-4.3"></path>
-            </svg>
-            <input type="text" id="search-reports" placeholder="Search reports...">
-        </div>
-        <div class="filter-select">
-            <select id="executor-filter">
-                <option value="">All Executors</option>
-                <option value="Synapse X">Synapse X</option>
-                <option value="Script-Ware">Script-Ware</option>
-                <option value="Krnl">Krnl</option>
-                <option value="Fluxus">Fluxus</option>
-            </select>
-        </div>
-    </div>
-
-    <!-- Reports Grid -->
-    <div class="reports-grid" id="reports-grid">
-        <!-- Reports will be loaded here -->
-    </div>
-
-    <!-- Loading State -->
-    <div class="loading-state" id="loading-state">
-        <div class="loading-spinner"></div>
-        <p>Loading reports...</p>
-    </div>
-
-    <!-- Empty State -->
-    <div class="empty-state" id="empty-state" style="display: none;">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="12" y1="8" x2="12" y2="12"></line>
-            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-        </svg>
-        <h3>No reports found</h3>
-        <p>Try adjusting your search or filter criteria</p>
-    </div>
-</section>
-
-<!-- Report Modal -->
-<div class="modal-overlay" id="report-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modal-title">Report Details</h3>
-            <button class="modal-close" id="modal-close">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="report-meta">
-                <div class="meta-item">
-                    <span class="meta-label">Report ID</span>
-                    <span class="meta-value" id="modal-id"></span>
+        <section class="reports">
+            <div class="section-header">
+                <h2>Recent Reports</h2>
+                <p>View the latest executor test results</p>
+            </div>
+            
+            <!-- Search and Filter Bar -->
+            <div class="reports-controls">
+                <div class="search-box">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                    </svg>
+                    <input type="text" id="search-reports" placeholder="Search reports...">
                 </div>
-                <div class="meta-item">
-                    <span class="meta-label">Executor</span>
-                    <span class="meta-value" id="modal-executor"></span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Date</span>
-                    <span class="meta-value" id="modal-date"></span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Status</span>
-                    <span class="status-badge" id="modal-status"></span>
+                <div class="filter-select">
+                    <select id="executor-filter">
+                        <option value="">All Executors</option>
+                        <option value="Synapse X">Synapse X</option>
+                        <option value="Script-Ware">Script-Ware</option>
+                        <option value="Krnl">Krnl</option>
+                        <option value="Fluxus">Fluxus</option>
+                        <option value="Electron">Electron</option>
+                    </select>
                 </div>
             </div>
-            <div class="report-data">
-                <div class="data-section">
-                    <h4>Test Results</h4>
-                    <div class="results-grid" id="results-grid"></div>
+
+            <!-- Reports Grid -->
+            <div class="reports-grid" id="reports-grid">
+                <!-- Reports will be loaded here -->
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-state" id="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading reports...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="empty-state" style="display: none;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <h3>No reports found</h3>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
+        </section>
+
+        <!-- Report Modal -->
+        <div class="modal-overlay" id="report-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Report Details</h3>
+                    <button class="modal-close" id="modal-close">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
-                <div class="data-section">
-                    <h4>Raw Data</h4>
-                    <div class="code-container">
-                        <pre id="modal-raw-data"></pre>
+                <div class="modal-body">
+                    <div class="report-meta-grid">
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Report ID</span>
+                            <span class="modal-meta-value" id="modal-id"></span>
+                        </div>
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Executor</span>
+                            <span class="modal-meta-value" id="modal-executor"></span>
+                        </div>
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Date</span>
+                            <span class="modal-meta-value" id="modal-date"></span>
+                        </div>
+                        <div class="modal-meta-item">
+                            <span class="modal-meta-label">Status</span>
+                            <span class="status-badge" id="modal-status"></span>
+                        </div>
+                    </div>
+                    <div class="report-data">
+                        <div class="data-section">
+                            <h4>Test Results</h4>
+                            <div class="results-grid" id="results-grid"></div>
+                        </div>
+                        <div class="data-section">
+                            <h4>Raw Data</h4>
+                            <div class="code-container">
+                                <pre id="modal-raw-data"></pre>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
         <footer>
             <div class="footer-content">
@@ -764,225 +855,251 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
     </div>
 
     <script>
-function copyCode() {
-    const code = document.getElementById('script-code').textContent;
-    navigator.clipboard.writeText(code).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        btn.textContent = 'Copied!';
-        setTimeout(() => {
-            btn.textContent = 'Copy';
-        }, 2000);
-    });
-}
-
-// Generate random ID (8-character alphanumeric)
-function generateRandomId() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < 8; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-}
-
-// Format date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-}
-
-// Determine status based on test results
-function getTestStatus(reportData) {
-    if (!reportData.results) return 'pending';
-    
-    const passed = reportData.results.passed || 0;
-    const total = reportData.results.total || 0;
-    
-    if (total === 0) return 'pending';
-    if (passed === total) return 'completed';
-    if (passed === 0) return 'failed';
-    return 'pending';
-}
-
-// Create report card
-function createReportCard(report) {
-    const card = document.createElement('div');
-    card.className = 'report-card';
-    card.onclick = () => openReportModal(report);
-    
-    const status = getTestStatus(report.data);
-    const statusText = status.charAt(0).toUpperCase() + status.slice(1);
-    
-    card.innerHTML = `
-        <div class="report-header">
-            <div class="report-id">NEBULA-${report.id}</div>
-            <div class="report-date">${formatDate(report.createdAt)}</div>
-        </div>
-        <div class="report-executor">${report.executor.name}</div>
-        <div class="report-meta">
-            <div class="meta-item">
-                <span class="meta-label">Tests</span>
-                <span class="meta-value">${report.data.results?.total || 0} total</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-label">Passed</span>
-                <span class="meta-value">${report.data.results?.passed || 0}</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-label">Status</span>
-                <span class="status-badge status-${status}">${statusText}</span>
-            </div>
-        </div>
-    `;
-    
-    return card;
-}
-
-// Open report modal
-function openReportModal(report) {
-    const modal = document.getElementById('report-modal');
-    const status = getTestStatus(report.data);
-    const statusText = status.charAt(0).toUpperCase() + status.slice(1);
-    
-    // Set modal content
-    document.getElementById('modal-title').textContent = `Report NEBULA-${report.id}`;
-    document.getElementById('modal-id').textContent = report.id;
-    document.getElementById('modal-executor').textContent = report.executor.name;
-    document.getElementById('modal-date').textContent = formatDate(report.createdAt);
-    document.getElementById('modal-status').textContent = statusText;
-    document.getElementById('modal-status').className = `status-badge status-${status}`;
-    
-    // Set test results
-    const resultsGrid = document.getElementById('results-grid');
-    if (report.data.results) {
-        resultsGrid.innerHTML = `
-            <div class="result-item">
-                <div class="result-name">Total Tests</div>
-                <div class="result-value">${report.data.results.total || 0}</div>
-            </div>
-            <div class="result-item">
-                <div class="result-name">Passed</div>
-                <div class="result-value result-pass">${report.data.results.passed || 0}</div>
-            </div>
-            <div class="result-item">
-                <div class="result-name">Failed</div>
-                <div class="result-value result-fail">${report.data.results.failed || 0}</div>
-            </div>
-            <div class="result-item">
-                <div class="result-name">Success Rate</div>
-                <div class="result-value ${(report.data.results.passed / report.data.results.total) >= 0.8 ? 'result-pass' : 'result-warning'}">
-                    ${report.data.results.total ? Math.round((report.data.results.passed / report.data.results.total) * 100) : 0}%
-                </div>
-            </div>
-        `;
-    } else {
-        resultsGrid.innerHTML = '<div class="result-item"><div class="result-name">No test data available</div></div>';
-    }
-    
-    // Set raw data
-    document.getElementById('modal-raw-data').textContent = JSON.stringify(report.data, null, 2);
-    
-    // Show modal
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-
-// Close modal
-function closeModal() {
-    const modal = document.getElementById('report-modal');
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-// Filter and search reports
-function filterReports() {
-    const searchTerm = document.getElementById('search-reports').value.toLowerCase();
-    const executorFilter = document.getElementById('executor-filter').value;
-    const reportsGrid = document.getElementById('reports-grid');
-    const emptyState = document.getElementById('empty-state');
-    
-    const filteredReports = window.allReports.filter(report => {
-        const matchesSearch = report.id.toLowerCase().includes(searchTerm) || 
-                            report.executor.name.toLowerCase().includes(searchTerm);
-        const matchesExecutor = !executorFilter || report.executor.name === executorFilter;
-        return matchesSearch && matchesExecutor;
-    });
-    
-    reportsGrid.innerHTML = '';
-    
-    if (filteredReports.length === 0) {
-        emptyState.style.display = 'block';
-    } else {
-        emptyState.style.display = 'none';
-        filteredReports.forEach(report => {
-            reportsGrid.appendChild(createReportCard(report));
-        });
-    }
-}
-
-// Load reports
-async function loadReports() {
-    const loadingState = document.getElementById('loading-state');
-    const reportsGrid = document.getElementById('reports-grid');
-    const emptyState = document.getElementById('empty-state');
-    
-    try {
-        loadingState.style.display = 'block';
-        reportsGrid.innerHTML = '';
-        emptyState.style.display = 'none';
-        
-        const response = await fetch('/reports');
-        const reports = await response.json();
-        
-        // Store all reports for filtering
-        window.allReports = reports;
-        
-        loadingState.style.display = 'none';
-        
-        if (reports.length === 0) {
-            emptyState.style.display = 'block';
-        } else {
-            reports.forEach(report => {
-                reportsGrid.appendChild(createReportCard(report));
+        function copyCode() {
+            const code = document.getElementById('script-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                }, 2000);
             });
         }
-    } catch (error) {
-        console.log('Reports not available');
-        loadingState.style.display = 'none';
-        emptyState.style.display = 'block';
-    }
-}
 
-// Event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    loadReports();
-    
-    // Search and filter
-    document.getElementById('search-reports').addEventListener('input', filterReports);
-    document.getElementById('executor-filter').addEventListener('change', filterReports);
-    
-    // Modal close
-    document.getElementById('modal-close').addEventListener('click', closeModal);
-    document.getElementById('report-modal').addEventListener('click', function(e) {
-        if (e.target === this) closeModal();
-    });
-    
-    // Escape key to close modal
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
-    });
-});
+        // Generate random ID (8-character alphanumeric)
+        function generateRandomId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Determine status based on test results
+        function getTestStatus(reportData) {
+            if (!reportData.results) return 'pending';
+            
+            const passed = reportData.results.passed || 0;
+            const total = reportData.results.total || 0;
+            
+            if (total === 0) return 'pending';
+            if (passed === total) return 'completed';
+            if (passed === 0) return 'failed';
+            return 'pending';
+        }
+
+        // Create report card
+        function createReportCard(report) {
+            const card = document.createElement('div');
+            card.className = 'report-card';
+            card.onclick = () => openReportModal(report);
+            
+            const status = getTestStatus(report.data);
+            const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+            
+            card.innerHTML = `
+                <div class="report-header">
+                    <div class="report-id">NEBULA-${report.id}</div>
+                    <div class="report-date">${formatDate(report.createdAt)}</div>
+                </div>
+                <div class="report-executor">${report.executor.name}</div>
+                <div class="report-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">Tests</span>
+                        <span class="meta-value">${report.data.results?.total || 0} total</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Passed</span>
+                        <span class="meta-value">${report.data.results?.passed || 0}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Status</span>
+                        <span class="status-badge status-${status}">${statusText}</span>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Open report modal
+        function openReportModal(report) {
+            const modal = document.getElementById('report-modal');
+            const status = getTestStatus(report.data);
+            const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+            
+            // Set modal content
+            document.getElementById('modal-title').textContent = `Report NEBULA-${report.id}`;
+            document.getElementById('modal-id').textContent = report.id;
+            document.getElementById('modal-executor').textContent = report.executor.name;
+            document.getElementById('modal-date').textContent = formatDate(report.createdAt);
+            document.getElementById('modal-status').textContent = statusText;
+            document.getElementById('modal-status').className = `status-badge status-${status}`;
+            
+            // Set test results
+            const resultsGrid = document.getElementById('results-grid');
+            if (report.data.results) {
+                resultsGrid.innerHTML = `
+                    <div class="result-item">
+                        <div class="result-name">Total Tests</div>
+                        <div class="result-value">${report.data.results.total || 0}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-name">Passed</div>
+                        <div class="result-value result-pass">${report.data.results.passed || 0}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-name">Failed</div>
+                        <div class="result-value result-fail">${report.data.results.failed || 0}</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-name">Success Rate</div>
+                        <div class="result-value ${(report.data.results.passed / report.data.results.total) >= 0.8 ? 'result-pass' : 'result-warning'}">
+                            ${report.data.results.total ? Math.round((report.data.results.passed / report.data.results.total) * 100) : 0}%
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultsGrid.innerHTML = '<div class="result-item"><div class="result-name">No test data available</div></div>';
+            }
+            
+            // Set raw data
+            document.getElementById('modal-raw-data').textContent = JSON.stringify(report.data, null, 2);
+            
+            // Show modal
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('report-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Filter and search reports
+        function filterReports() {
+            const searchTerm = document.getElementById('search-reports').value.toLowerCase();
+            const executorFilter = document.getElementById('executor-filter').value;
+            const reportsGrid = document.getElementById('reports-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            const filteredReports = window.allReports.filter(report => {
+                const matchesSearch = report.id.toLowerCase().includes(searchTerm) || 
+                                    report.executor.name.toLowerCase().includes(searchTerm);
+                const matchesExecutor = !executorFilter || report.executor.name === executorFilter;
+                return matchesSearch && matchesExecutor;
+            });
+            
+            reportsGrid.innerHTML = '';
+            
+            if (filteredReports.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+                filteredReports.forEach(report => {
+                    reportsGrid.appendChild(createReportCard(report));
+                });
+            }
+        }
+
+        // Load reports
+        async function loadReports() {
+            const loadingState = document.getElementById('loading-state');
+            const reportsGrid = document.getElementById('reports-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            try {
+                loadingState.style.display = 'block';
+                reportsGrid.innerHTML = '';
+                emptyState.style.display = 'none';
+                
+                // For demo purposes, we'll generate some sample data
+                // In production, you would fetch from your API
+                const sampleReports = generateSampleReports();
+                window.allReports = sampleReports;
+                
+                loadingState.style.display = 'none';
+                
+                if (sampleReports.length === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    sampleReports.forEach(report => {
+                        reportsGrid.appendChild(createReportCard(report));
+                    });
+                }
+            } catch (error) {
+                console.log('Reports not available', error);
+                loadingState.style.display = 'none';
+                emptyState.style.display = 'block';
+            }
+        }
+
+        // Generate sample reports for demonstration
+        function generateSampleReports() {
+            const executors = ['Synapse X', 'Script-Ware', 'Krnl', 'Fluxus', 'Electron'];
+            const statuses = ['completed', 'failed', 'pending'];
+            
+            return Array.from({ length: 12 }, (_, i) => {
+                const executor = executors[Math.floor(Math.random() * executors.length)];
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const totalTests = Math.floor(Math.random() * 50) + 10;
+                const passedTests = status === 'completed' ? totalTests : 
+                                  status === 'failed' ? Math.floor(totalTests * 0.2) : 
+                                  Math.floor(totalTests * 0.7);
+                
+                return {
+                    id: generateRandomId(),
+                    executor: { name: executor },
+                    createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+                    data: {
+                        results: {
+                            total: totalTests,
+                            passed: passedTests,
+                            failed: totalTests - passedTests
+                        },
+                        executor: executor,
+                        version: `v${Math.floor(Math.random() * 5)}.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 100)}`,
+                        environment: 'Roblox',
+                        timestamp: new Date().toISOString()
+                    }
+                };
+            });
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReports();
+            
+            // Search and filter
+            document.getElementById('search-reports').addEventListener('input', filterReports);
+            document.getElementById('executor-filter').addEventListener('change', filterReports);
+            
+            // Modal close
+            document.getElementById('modal-close').addEventListener('click', closeModal);
+            document.getElementById('report-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+            
+            // Escape key to close modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        });
     </script>
 </body>
 </html>
-
-
-
-
-
