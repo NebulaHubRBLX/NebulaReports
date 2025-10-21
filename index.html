@@ -490,21 +490,23 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
             }
         }
 
-        async function loadReport(id) {
-            try {
-                const response = await fetch(`/report/${id}`);
-                const data = await response.json();
-                const details = document.getElementById('report-details');
-                const content = document.getElementById('report-content');
-                content.textContent = JSON.stringify(data, null, 2);
-                details.style.display = 'block';
-            } catch (error) {
-                console.log('Report details not available');
-            }
-        }
+async function loadReport(id) {
+    try {
+        const response = await fetch(`/report/${id}/json`);
+        const data = await response.json();
+        const details = document.getElementById('report-details');
+        const content = document.getElementById('report-content');
+        content.textContent = JSON.stringify(data, null, 2);
+        details.style.display = 'block';
+        details.scrollIntoView({ behavior: 'smooth' });
+    } catch (error) {
+        console.error('Failed to load report:', error);
+    }
+}
 
         window.onload = loadReports;
     </script>
 </body>
 </html>
+
 
