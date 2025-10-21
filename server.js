@@ -1,54 +1,162 @@
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const reportsFile = path.join(__dirname, 'reports.json');
 
-app.use(express.json());
-app.use(express.static(__dirname)); // Serve static files
+// Middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.static(__dirname));
 
-// Load existing reports or create empty array
-const reportsFile = 'reports.json';
+// In-memory reports cache
 let reports = [];
-if (fs.existsSync(reportsFile)) {
-    reports = JSON.parse(fs.readFileSync(reportsFile, 'utf8'));
+
+// Initialize reports from file
+async function loadReports() {
+    try {
+        if (fsSync.existsSync(reportsFile)) {
+            const data = await fs.readFile(reportsFile, 'utf8');
+            reports = JSON.parse(data);
+            console.log(`Loaded ${reports.length} reports from file`);
+        } else {
+            reports = [];
+            console.log('No existing reports file found, starting fresh');
+        }
+    } catch (error) {
+        console.error('Error loading reports:', error);
+        reports = [];
+    }
+}
+
+// Save reports to file with error handling
+async function saveReports() {
+    try {
+        await fs.writeFile(reportsFile, JSON.stringify(reports, null, 2), 'utf8');
+        return true;
+    } catch (error) {
+        console.error('Error saving reports:', error);
+        return false;
+    }
+}
+
+// Validate report data
+function validateReportData(data) {
+    if (!data || typeof data !== 'object') {
+        return { valid: false, error: 'Invalid report data' };
+    }
+    return { valid: true };
+}
+
+// Generate unique ID
+function generateId() {
+    return reports.length > 0 
+        ? Math.max(...reports.map(r => r.id)) + 1 
+        : 1;
 }
 
 // POST /report -> create a new report
-app.post('/report', (req, res) => {
-    const reportData = req.body;
-    const id = reports.length + 1;
+app.post('/report', async (req, res) => {
+    try {
+        const reportData = req.body;
+        
+        // Validate input
+        const validation = validateReportData(reportData);
+        if (!validation.valid) {
+            return res.status(400).json({ error: validation.error });
+        }
 
-    const report = {
-        id,
-        data: reportData,
-        executor: reportData.executor || { name: 'Unknown' }
-    };
+        const id = generateId();
+        const report = {
+            id,
+            data: reportData,
+            executor: reportData.executor || { name: 'Unknown' },
+            createdAt: new Date().toISOString()
+        };
 
-    reports.push(report);
-    fs.writeFileSync(reportsFile, JSON.stringify(reports, null, 2));
+        reports.push(report);
+        
+        // Save to file
+        const saved = await saveReports();
+        if (!saved) {
+            return res.status(500).json({ error: 'Failed to save report' });
+        }
 
-    // Return the ID and full URL link
-    const host = req.get('host'); // Get the host from the request
-    const protocol = req.protocol;
-    res.json({
-        id,
-        link: `${protocol}://${host}/report/${id}`
-    });
+        // Build response with full URL
+        const protocol = req.get('x-forwarded-proto') || req.protocol;
+        const host = req.get('host');
+        
+        res.status(201).json({
+            id,
+            link: `${protocol}://${host}/report/${id}`,
+            createdAt: report.createdAt
+        });
+    } catch (error) {
+        console.error('Error creating report:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // GET /reports -> list all reports
 app.get('/reports', (req, res) => {
-    res.json(reports.map(r => ({ id: r.id, executor: r.executor.name })));
+    try {
+        const reportsList = reports.map(r => ({
+            id: r.id,
+            executor: r.executor.name,
+            createdAt: r.createdAt
+        }));
+        res.json(reportsList);
+    } catch (error) {
+        console.error('Error fetching reports:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 // GET /report/:id -> serve HTML page for report
 app.get('/report/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const report = reports.find(r => r.id === id);
+    try {
+        const id = parseInt(req.params.id, 10);
+        
+        if (isNaN(id)) {
+            return res.status(400).send('<h1>Invalid report ID</h1>');
+        }
 
-    if (report) {
+        const report = reports.find(r => r.id === id);
+        
+        if (!report) {
+            return res.status(404).send(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Report Not Found</title>
+                    <style>
+                        body { 
+                            font-family: Arial, sans-serif; 
+                            padding: 20px; 
+                            background: #f2f2f2;
+                            text-align: center;
+                        }
+                        h1 { color: #d32f2f; }
+                        a { color: #1976d2; text-decoration: none; }
+                        a:hover { text-decoration: underline; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Report #${id} Not Found</h1>
+                    <p><a href="/reports">View all reports</a></p>
+                </body>
+                </html>
+            `);
+        }
+
+        const sanitizedData = JSON.stringify(report.data, null, 2)
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+
         res.send(`
             <!DOCTYPE html>
             <html lang="en">
@@ -57,20 +165,54 @@ app.get('/report/:id', (req, res) => {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Report #${id}</title>
                 <style>
-                    body { font-family: Arial, sans-serif; padding: 20px; background: #f2f2f2; }
+                    body { 
+                        font-family: Arial, sans-serif; 
+                        padding: 20px; 
+                        background: #f2f2f2;
+                        max-width: 1200px;
+                        margin: 0 auto;
+                    }
                     h1 { color: #333; }
-                    pre { background: #fff; padding: 15px; border-radius: 5px; overflow-x: auto; }
+                    h2 { color: #666; }
+                    .metadata {
+                        background: #fff;
+                        padding: 15px;
+                        border-radius: 5px;
+                        margin-bottom: 20px;
+                    }
+                    pre { 
+                        background: #fff; 
+                        padding: 15px; 
+                        border-radius: 5px; 
+                        overflow-x: auto;
+                        border: 1px solid #ddd;
+                    }
+                    .back-link {
+                        display: inline-block;
+                        margin-bottom: 20px;
+                        color: #1976d2;
+                        text-decoration: none;
+                    }
+                    .back-link:hover {
+                        text-decoration: underline;
+                    }
                 </style>
             </head>
             <body>
+                <a href="/reports" class="back-link">← Back to all reports</a>
                 <h1>Report #${id}</h1>
-                <h2>Executor: ${report.executor.name}</h2>
-                <pre>${JSON.stringify(report.data, null, 2)}</pre>
+                <div class="metadata">
+                    <h2>Executor: ${report.executor.name}</h2>
+                    ${report.createdAt ? `<p><strong>Created:</strong> ${new Date(report.createdAt).toLocaleString()}</p>` : ''}
+                </div>
+                <h3>Report Data:</h3>
+                <pre>${sanitizedData}</pre>
             </body>
             </html>
         `);
-    } else {
-        res.status(404).send('<h1>Report not found</h1>');
+    } catch (error) {
+        console.error('Error serving report:', error);
+        res.status(500).send('<h1>Internal Server Error</h1>');
     }
 });
 
@@ -79,7 +221,51 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Start server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ 
+        status: 'ok', 
+        reports: reports.length,
+        uptime: process.uptime()
+    });
 });
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({ error: 'Not found' });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+});
+
+// Start server
+async function startServer() {
+    try {
+        await loadReports();
+        app.listen(port, () => {
+            console.log(`Server running at http://localhost:${port}`);
+            console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+        });
+    } catch (error) {
+        console.error('Failed to start server:', error);
+        process.exit(1);
+    }
+}
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+    console.log('SIGTERM received, saving reports and shutting down...');
+    await saveReports();
+    process.exit(0);
+});
+
+process.on('SIGINT', async () => {
+    console.log('SIGINT received, saving reports and shutting down...');
+    await saveReports();
+    process.exit(0);
+});
+
+startServer();
