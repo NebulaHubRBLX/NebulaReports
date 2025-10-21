@@ -50,11 +50,20 @@ function validateReportData(data) {
     return { valid: true };
 }
 
-// Generate unique ID
+// Generate random alphanumeric ID
 function generateId() {
-    return reports.length > 0 
-        ? Math.max(...reports.map(r => r.id)) + 1 
-        : 1;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < 8; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    // Ensure uniqueness
+    if (reports.find(r => r.id === result)) {
+        return generateId(); // Recursively generate until unique
+    }
+    
+    return result;
 }
 
 // POST /report -> create a new report
@@ -291,3 +300,4 @@ process.on('SIGINT', async () => {
 });
 
 startServer();
+
