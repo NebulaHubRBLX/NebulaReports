@@ -7,52 +7,6 @@
     <link rel="icon" href="https://dirtyw0rk.neocities.org/N.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-        /* Grade styles */
-.report-grade {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-}
-
-.grade-label {
-    font-size: 0.875rem;
-    color: var(--gray);
-}
-
-.grade-value {
-    font-weight: 700;
-    font-size: 1.125rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0.375rem;
-}
-
-.grade-a-plus {
-    background: rgba(34, 197, 94, 0.2);
-    color: #16a34a;
-    border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.grade-a {
-    background: rgba(34, 197, 94, 0.15);
-    color: #22c55e;
-    border: 1px solid rgba(34, 197, 94, 0.25);
-}
-
-.grade-b {
-    background: rgba(234, 179, 8, 0.15);
-    color: #eab308;
-    border: 1px solid rgba(234, 179, 8, 0.25);
-}
-
-.grade-c {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.25);
-}
         
         * {
             margin: 0;
@@ -68,6 +22,8 @@
             --border: #1f1f1f;
             --card-bg: #0a0a0a;
             --hover-bg: #0f0f0f;
+            --discord-bg: #2b2d31;
+            --discord-header: #1e1f22;
         }
         
         body {
@@ -325,118 +281,186 @@
             cursor: pointer;
         }
 
-        /* Reports Grid */
+        /* Discord-style Report Cards */
         .reports-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .report-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
+            background: var(--discord-bg);
+            border: 1px solid #404249;
+            border-radius: 0.5rem;
+            overflow: hidden;
             cursor: pointer;
             transition: all 0.2s;
-            position: relative;
-            overflow: hidden;
         }
 
         .report-card:hover {
-            background: var(--hover-bg);
-            border-color: #333;
             transform: translateY(-2px);
-        }
-
-        .report-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent), #ff6b6b);
+            border-color: #555;
         }
 
         .report-header {
+            background: var(--discord-header);
+            padding: 1rem;
+            border-bottom: 1px solid #404249;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .report-id {
-            font-family: 'SF Mono', Monaco, monospace;
-            font-weight: 700;
-            font-size: 0.875rem;
-            color: var(--accent);
-            background: rgba(255, 0, 0, 0.1);
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.375rem;
+        .report-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
         }
 
-        .report-date {
+        .report-title {
+            flex: 1;
+        }
+
+        .report-title h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .report-title .version {
             font-size: 0.75rem;
             color: var(--gray);
         }
 
-        .report-executor {
+        .report-id {
+            background: rgba(255, 0, 0, 0.1);
+            color: var(--accent);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'SF Mono', monospace;
+        }
+
+        .report-body {
+            padding: 1rem;
+        }
+
+        .executor-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .executor-icon {
+            font-size: 1.25rem;
+        }
+
+        .executor-name {
             font-weight: 600;
             font-size: 1.125rem;
+        }
+
+        .success-rate {
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
 
-        .report-meta {
+        .grade {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .stars {
             display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            color: #fbbf24;
+            font-size: 1.25rem;
+        }
+
+        .star.empty {
+            color: #4b5563;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin-bottom: 1rem;
         }
 
-        .meta-item {
+        .stat-item {
             display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
         }
 
-        .meta-label {
+        .stat-icon {
+            width: 16px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-weight: 600;
+        }
+
+        .category-progress {
+            margin-top: 1rem;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .category-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-icon {
+            width: 16px;
+            text-align: center;
+        }
+
+        .category-score {
+            font-weight: 600;
+        }
+
+        .report-footer {
+            background: var(--discord-header);
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #404249;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 0.75rem;
             color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
-        .meta-value {
-            font-size: 0.875rem;
-            font-weight: 500;
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-completed {
-            background: rgba(34, 197, 94, 0.1);
-            color: #22c55e;
-            border: 1px solid rgba(34, 197, 94, 0.2);
-        }
-
-        .status-failed {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .status-pending {
-            background: rgba(234, 179, 8, 0.1);
-            color: #eab308;
-            border: 1px solid rgba(234, 179, 8, 0.2);
+        .footer-logo {
+            width: 16px;
+            height: 16px;
         }
 
         /* Loading and Empty States */
@@ -488,11 +512,11 @@
         }
 
         .modal-content {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
+            background: var(--discord-bg);
+            border: 1px solid #404249;
+            border-radius: 0.75rem;
             width: 100%;
-            max-width: 900px;
+            max-width: 800px;
             max-height: 90vh;
             overflow: hidden;
             display: flex;
@@ -500,17 +524,33 @@
         }
 
         .modal-header {
+            background: var(--discord-header);
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #404249;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border);
+            gap: 0.75rem;
         }
 
-        .modal-header h3 {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
+        .modal-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .modal-title {
+            flex: 1;
+        }
+
+        .modal-title h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-title .version {
+            font-size: 0.875rem;
+            color: var(--gray);
         }
 
         .modal-close {
@@ -524,106 +564,93 @@
         }
 
         .modal-close:hover {
-            background: #1a1a1a;
+            background: #404249;
             color: var(--text);
         }
 
         .modal-body {
-            padding: 2rem;
+            padding: 1.5rem;
             overflow-y: auto;
             flex: 1;
         }
 
-        .report-meta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
+        .modal-section {
             margin-bottom: 2rem;
-            padding: 1.5rem;
-            background: var(--card-bg);
-            border-radius: 0.75rem;
-            border: 1px solid var(--border);
         }
 
-        .modal-meta-item {
+        .modal-section h4 {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 0.5rem;
-        }
-
-        .modal-meta-label {
-            font-size: 0.75rem;
-            color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 600;
-        }
-
-        .modal-meta-value {
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .data-section {
-            margin-bottom: 2rem;
-        }
-
-        .data-section h4 {
             margin-bottom: 1rem;
-            font-size: 1.125rem;
+            font-size: 1rem;
             font-weight: 600;
         }
 
-        .results-grid {
+        .section-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
-        .result-item {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
+        .info-item {
+            background: rgba(255, 255, 255, 0.05);
             padding: 1rem;
+            border-radius: 0.375rem;
         }
 
-        .result-name {
+        .info-label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-value {
+            font-weight: 600;
             font-size: 0.875rem;
-            font-weight: 500;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 0.375rem;
+            text-align: center;
+        }
+
+        .category-card h5 {
+            font-size: 0.875rem;
             margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
-        .result-value {
-            font-size: 1.125rem;
-            font-weight: 700;
+        .category-stats {
+            font-size: 0.75rem;
+            color: var(--gray);
         }
 
-        .result-pass {
-            color: #22c55e;
+        .category-percentage {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 0.25rem;
         }
 
-        .result-fail {
-            color: #ef4444;
-        }
-
-        .result-warning {
-            color: #eab308;
-        }
-
-        .code-container {
-            background: #000;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            overflow: hidden;
-        }
-
-        .code-container pre {
-            margin: 0;
-            padding: 1.5rem;
-            max-height: 300px;
-            overflow: auto;
-        }
+        .category-pass { color: #22c55e; }
+        .category-warn { color: #eab308; }
+        .category-fail { color: #ef4444; }
 
         /* Footer */
         footer {
@@ -714,8 +741,12 @@
                 padding: 1rem;
             }
             
-            .report-meta-grid {
+            .info-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -812,6 +843,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
                         <option value="Krnl">Krnl</option>
                         <option value="Fluxus">Fluxus</option>
                         <option value="Electron">Electron</option>
+                        <option value="Xeno">Xeno</option>
                     </select>
                 </div>
             </div>
@@ -843,7 +875,11 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
         <div class="modal-overlay" id="report-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 id="modal-title">Report Details</h3>
+                    <img src="https://dirtyw0rk.neocities.org/N.png" alt="nUNC Logo" class="modal-logo">
+                    <div class="modal-title">
+                        <h3 id="modal-title">nUNC v2.0.0</h3>
+                        <div class="version">Unified Naming Convention Test Results</div>
+                    </div>
                     <button class="modal-close" id="modal-close">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -852,36 +888,144 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="report-meta-grid">
-                        <div class="modal-meta-item">
-                            <span class="modal-meta-label">Report ID</span>
-                            <span class="modal-meta-value" id="modal-id"></span>
+                    <div class="modal-section">
+                        <h4>
+                            <span class="section-icon">⚡</span>
+                            <span id="modal-executor-name">Executor Results</span>
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Success Rate</div>
+                                <div class="info-value" id="modal-success-rate">0%</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Grade</div>
+                                <div class="info-value" id="modal-grade">F</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Total Tests</div>
+                                <div class="info-value" id="modal-total-tests">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Duration</div>
+                                <div class="info-value" id="modal-duration">0s</div>
+                            </div>
                         </div>
-                        <div class="modal-meta-item">
-                            <span class="modal-meta-label">Executor</span>
-                            <span class="modal-meta-value" id="modal-executor"></span>
-                        </div>
-                        <div class="modal-meta-item">
-                            <span class="modal-meta-label">Date</span>
-                            <span class="modal-meta-value" id="modal-date"></span>
-                        </div>
-                        <div class="modal-meta-item">
-                            <span class="modal-meta-label">Status</span>
-                            <span class="status-badge" id="modal-status"></span>
-                        </div>
+                        <div class="stars" id="modal-stars"></div>
                     </div>
-                    <div class="report-data">
-                        <div class="data-section">
-                            <h4>Test Results</h4>
-                            <div class="results-grid" id="results-grid"></div>
-                        </div>
-                        <div class="data-section">
-                            <h4>Raw Data</h4>
-                            <div class="code-container">
-                                <pre id="modal-raw-data"></pre>
+
+                    <div class="modal-section">
+                        <h4>
+                            <span class="section-icon">🛠️</span>
+                            Executor Information
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Name</div>
+                                <div class="info-value" id="modal-executor">Unknown</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Version</div>
+                                <div class="info-value" id="modal-version">Unknown</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Type</div>
+                                <div class="info-value" id="modal-type">Unknown</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Features</div>
+                                <div class="info-value" id="modal-features">None</div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal-section">
+                        <h4>
+                            <span class="section-icon">📊</span>
+                            Test Statistics
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">✅ Passed</div>
+                                <div class="info-value" id="modal-passed">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">❌ Failed</div>
+                                <div class="info-value" id="modal-failed">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">⏺️ No Test</div>
+                                <div class="info-value" id="modal-no-tests">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">⚠️ Missing Aliases</div>
+                                <div class="info-value" id="modal-undefined">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>
+                            <span class="section-icon">🎮</span>
+                            Game Information
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Player Name</div>
+                                <div class="info-value" id="modal-player-name">Unknown</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Account Age</div>
+                                <div class="info-value" id="modal-player-age">Unknown</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Place</div>
+                                <div class="info-value" id="modal-place">Unknown</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Players</div>
+                                <div class="info-value" id="modal-players">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>
+                            <span class="section-icon">💻</span>
+                            System Information
+                        </h4>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Platform</div>
+                                <div class="info-value" id="modal-platform">Unknown</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">FPS</div>
+                                <div class="info-value" id="modal-fps">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Ping</div>
+                                <div class="info-value" id="modal-ping">0ms</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-section">
+                        <h4>
+                            <span class="section-icon">📦</span>
+                            Category Results
+                        </h4>
+                        <div class="categories-grid" id="modal-categories">
+                            <!-- Categories will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="report-footer">
+                    <div class="footer-brand">
+                        <img src="https://dirtyw0rk.neocities.org/N.png" alt="nUNC" class="footer-logo">
+                        <span>nUNC - Nebula's Unified Naming Convention • Based on Official UNC Standard</span>
+                    </div>
+                    <div id="modal-timestamp">Just now</div>
                 </div>
             </div>
         </div>
@@ -900,247 +1044,296 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/NebulaHubRBLX/2435678
         </footer>
     </div>
 
-<script>
-    function copyCode() {
-        const code = document.getElementById('script-code').textContent;
-        navigator.clipboard.writeText(code).then(() => {
-            const btn = document.querySelector('.copy-btn');
-            btn.textContent = 'Copied!';
-            setTimeout(() => {
-                btn.textContent = 'Copy';
-            }, 2000);
-        });
-    }
-
-    // Format date
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-
-    // Determine status based on test results
-    function getTestStatus(report) {
-        const successRate = report.successRate || 0;
-        if (successRate >= 80) return 'completed';
-        if (successRate >= 50) return 'pending';
-        return 'failed';
-    }
-
-    // Create report card
-    function createReportCard(report) {
-        const card = document.createElement('div');
-        card.className = 'report-card';
-        card.onclick = () => openReportModal(report);
-        
-        const status = getTestStatus(report);
-        const statusText = status.charAt(0).toUpperCase() + status.slice(1);
-        
-        card.innerHTML = `
-            <div class="report-header">
-                <div class="report-id">NEBULA-${report.id}</div>
-                <div class="report-date">${formatDate(report.createdAt)}</div>
-            </div>
-            <div class="report-executor">${report.executor}</div>
-            <div class="report-meta">
-                <div class="meta-item">
-                    <span class="meta-label">Tests</span>
-                    <span class="meta-value">${report.totalTests || 0} total</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Passed</span>
-                    <span class="meta-value">${report.passed || 0}</span>
-                </div>
-                <div class="meta-item">
-                    <span class="meta-label">Status</span>
-                    <span class="status-badge status-${status}">${statusText}</span>
-                </div>
-            </div>
-            <div class="report-grade">
-                <span class="grade-label">Grade</span>
-                <span class="grade-value ${report.grade === 'A+' ? 'grade-a-plus' : report.grade === 'A' ? 'grade-a' : report.grade === 'B' ? 'grade-b' : 'grade-c'}">${report.grade || 'F'}</span>
-            </div>
-        `;
-        
-        return card;
-    }
-
-    // Open report modal
-    async function openReportModal(report) {
-        const modal = document.getElementById('report-modal');
-        
-        try {
-            // Fetch full report data
-            const response = await fetch(`/report/${report.id}/json`);
-            const fullReport = await response.json();
-            
-            const status = getTestStatus(fullReport);
-            const statusText = status.charAt(0).toUpperCase() + status.slice(1);
-            
-            // Set modal content
-            document.getElementById('modal-title').textContent = `Report NEBULA-${fullReport.id}`;
-            document.getElementById('modal-id').textContent = fullReport.id;
-            document.getElementById('modal-executor').textContent = fullReport.executor.name;
-            document.getElementById('modal-date').textContent = formatDate(fullReport.createdAt);
-            document.getElementById('modal-status').textContent = statusText;
-            document.getElementById('modal-status').className = `status-badge status-${status}`;
-            
-            // Set test results
-            const resultsGrid = document.getElementById('results-grid');
-            if (fullReport.results) {
-                resultsGrid.innerHTML = `
-                    <div class="result-item">
-                        <div class="result-name">Total Tests</div>
-                        <div class="result-value">${fullReport.results.total || 0}</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-name">Passed</div>
-                        <div class="result-value result-pass">${fullReport.results.passed || 0}</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-name">Failed</div>
-                        <div class="result-value result-fail">${fullReport.results.failed || 0}</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-name">Success Rate</div>
-                        <div class="result-value ${fullReport.results.successRate >= 80 ? 'result-pass' : fullReport.results.successRate >= 50 ? 'result-warning' : 'result-fail'}">
-                            ${fullReport.results.successRate || 0}%
-                        </div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-name">Grade</div>
-                        <div class="result-value ${fullReport.grade === 'A+' ? 'result-pass' : fullReport.grade === 'A' ? 'result-pass' : fullReport.grade === 'B' ? 'result-warning' : 'result-fail'}">
-                            ${fullReport.grade || 'F'}
-                        </div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-name">Duration</div>
-                        <div class="result-value">${fullReport.duration ? fullReport.duration.toFixed(2) + 's' : 'N/A'}</div>
-                    </div>
-                `;
-            } else {
-                resultsGrid.innerHTML = '<div class="result-item"><div class="result-name">No test data available</div></div>';
-            }
-            
-            // Set raw data
-            document.getElementById('modal-raw-data').textContent = JSON.stringify(fullReport, null, 2);
-            
-            // Show modal
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        } catch (error) {
-            console.error('Failed to load report details:', error);
-            alert('Failed to load report details');
-        }
-    }
-
-    // Close modal
-    function closeModal() {
-        const modal = document.getElementById('report-modal');
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-
-    // Filter and search reports
-    function filterReports() {
-        const searchTerm = document.getElementById('search-reports').value.toLowerCase();
-        const executorFilter = document.getElementById('executor-filter').value;
-        const reportsGrid = document.getElementById('reports-grid');
-        const emptyState = document.getElementById('empty-state');
-        
-        if (!window.allReports) return;
-        
-        const filteredReports = window.allReports.filter(report => {
-            const matchesSearch = report.id.toLowerCase().includes(searchTerm) || 
-                                report.executor.toLowerCase().includes(searchTerm);
-            const matchesExecutor = !executorFilter || report.executor === executorFilter;
-            return matchesSearch && matchesExecutor;
-        });
-        
-        reportsGrid.innerHTML = '';
-        
-        if (filteredReports.length === 0) {
-            emptyState.style.display = 'block';
-        } else {
-            emptyState.style.display = 'none';
-            filteredReports.forEach(report => {
-                reportsGrid.appendChild(createReportCard(report));
+    <script>
+        function copyCode() {
+            const code = document.getElementById('script-code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                }, 2000);
             });
         }
-    }
 
-    // Load reports
-    async function loadReports() {
-        const loadingState = document.getElementById('loading-state');
-        const reportsGrid = document.getElementById('reports-grid');
-        const emptyState = document.getElementById('empty-state');
-        
-        try {
-            loadingState.style.display = 'block';
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff / 60000) + ' minutes ago';
+            if (diff < 86400000) return Math.floor(diff / 3600000) + ' hours ago';
+            if (diff < 604800000) return Math.floor(diff / 86400000) + ' days ago';
+            
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // Calculate stars based on success rate
+        function calculateStars(successRate) {
+            const stars = Math.floor(successRate / 20);
+            return {
+                filled: stars,
+                total: 5
+            };
+        }
+
+        // Get category icon and color based on percentage
+        function getCategoryStyle(percentage) {
+            if (percentage >= 80) return { icon: '🟢', class: 'category-pass' };
+            if (percentage >= 50) return { icon: '🟡', class: 'category-warn' };
+            return { icon: '🔴', class: 'category-fail' };
+        }
+
+        // Create report card
+        function createReportCard(report) {
+            const card = document.createElement('div');
+            card.className = 'report-card';
+            card.onclick = () => openReportModal(report);
+            
+            const stars = calculateStars(report.successRate);
+            const starElements = Array.from({ length: 5 }, (_, i) => 
+                i < stars.filled ? '⭐' : '☆'
+            ).join('');
+
+            card.innerHTML = `
+                <div class="report-header">
+                    <img src="https://dirtyw0rk.neocities.org/N.png" alt="nUNC" class="report-logo">
+                    <div class="report-title">
+                        <h3>nUNC v2.0.0</h3>
+                        <div class="version">Unified Naming Convention Test Results</div>
+                    </div>
+                    <div class="report-id">NEBULA-${report.id}</div>
+                </div>
+                <div class="report-body">
+                    <div class="executor-header">
+                        <span class="executor-icon">⚡</span>
+                        <span class="executor-name">${report.executor}</span>
+                    </div>
+                    <div class="success-rate">${report.successRate}% success rate</div>
+                    <div class="grade">Grade ${report.grade}</div>
+                    <div class="stars">${starElements}</div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-icon">✅</span>
+                            <span class="stat-value">${report.passed}</span>
+                            <span>Passed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">❌</span>
+                            <span class="stat-value">${report.failed}</span>
+                            <span>Failed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">⏺️</span>
+                            <span class="stat-value">${report.noTests || 0}</span>
+                            <span>No Test</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">⚠️</span>
+                            <span class="stat-value">${report.undefined || 0}</span>
+                            <span>Missing Aliases</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-footer">
+                    <div class="footer-brand">
+                        <img src="https://dirtyw0rk.neocities.org/N.png" alt="nUNC" class="footer-logo">
+                        <span>nUNC - Nebula's Unified Naming Convention</span>
+                    </div>
+                    <div>${formatDate(report.createdAt)}</div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Open report modal
+        async function openReportModal(report) {
+            const modal = document.getElementById('report-modal');
+            
+            try {
+                // Fetch full report data
+                const response = await fetch(`/report/${report.id}/json`);
+                const fullReport = await response.json();
+                
+                // Set basic info
+                document.getElementById('modal-executor-name').textContent = 
+                    `${fullReport.executor.name} achieved a ${fullReport.results.successRate}% success rate with grade ${fullReport.grade}`;
+                
+                document.getElementById('modal-success-rate').textContent = fullReport.results.successRate + '%';
+                document.getElementById('modal-grade').textContent = fullReport.grade;
+                document.getElementById('modal-total-tests').textContent = fullReport.results.total;
+                document.getElementById('modal-duration').textContent = fullReport.duration.toFixed(2) + 's';
+                
+                // Set stars
+                const stars = calculateStars(fullReport.results.successRate);
+                const starsContainer = document.getElementById('modal-stars');
+                starsContainer.innerHTML = Array.from({ length: 5 }, (_, i) => 
+                    `<span class="star ${i >= stars.filled ? 'empty' : ''}">${i < stars.filled ? '⭐' : '☆'}</span>`
+                ).join('');
+                
+                // Set executor info
+                document.getElementById('modal-executor').textContent = fullReport.executor.name;
+                document.getElementById('modal-version').textContent = fullReport.executor.version || 'Unknown';
+                document.getElementById('modal-type').textContent = fullReport.executor.type || 'Unknown';
+                document.getElementById('modal-features').textContent = 
+                    fullReport.executor.features ? fullReport.executor.features.join(', ') : 'None';
+                
+                // Set test statistics
+                document.getElementById('modal-passed').textContent = fullReport.results.passed;
+                document.getElementById('modal-failed').textContent = fullReport.results.failed;
+                document.getElementById('modal-no-tests').textContent = fullReport.noTests || 0;
+                document.getElementById('modal-undefined').textContent = fullReport.undefined || 0;
+                
+                // Set game info
+                document.getElementById('modal-player-name').textContent = fullReport.player.playerName || 'Unknown';
+                document.getElementById('modal-player-age').textContent = fullReport.player.playerAge + ' days' || 'Unknown';
+                document.getElementById('modal-place').textContent = fullReport.system.placeName || 'Unknown';
+                document.getElementById('modal-players').textContent = fullReport.system.players || 0;
+                
+                // Set system info
+                document.getElementById('modal-platform').textContent = fullReport.system.platform || 'Unknown';
+                document.getElementById('modal-fps').textContent = fullReport.system.fps || 0;
+                document.getElementById('modal-ping').textContent = fullReport.system.ping + 'ms' || '0ms';
+                
+                // Set categories
+                const categoriesContainer = document.getElementById('modal-categories');
+                categoriesContainer.innerHTML = '';
+                
+                if (fullReport.categories && fullReport.categories.length > 0) {
+                    fullReport.categories.forEach(cat => {
+                        const style = getCategoryStyle(cat.percentage);
+                        const card = document.createElement('div');
+                        card.className = 'category-card';
+                        card.innerHTML = `
+                            <h5>${cat.name}</h5>
+                            <div class="category-stats">${cat.passed}/${cat.total}</div>
+                            <div class="category-percentage ${style.class}">${cat.percentage}%</div>
+                        `;
+                        categoriesContainer.appendChild(card);
+                    });
+                }
+                
+                // Set timestamp
+                document.getElementById('modal-timestamp').textContent = formatDate(fullReport.createdAt);
+                
+                // Show modal
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            } catch (error) {
+                console.error('Failed to load report details:', error);
+                alert('Failed to load report details');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('report-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Filter and search reports
+        function filterReports() {
+            const searchTerm = document.getElementById('search-reports').value.toLowerCase();
+            const executorFilter = document.getElementById('executor-filter').value;
+            const reportsGrid = document.getElementById('reports-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (!window.allReports) return;
+            
+            const filteredReports = window.allReports.filter(report => {
+                const matchesSearch = report.id.toLowerCase().includes(searchTerm) || 
+                                report.executor.toLowerCase().includes(searchTerm);
+                const matchesExecutor = !executorFilter || report.executor === executorFilter;
+                return matchesSearch && matchesExecutor;
+            });
+            
             reportsGrid.innerHTML = '';
-            emptyState.style.display = 'none';
             
-            const response = await fetch('/reports');
-            const reports = await response.json();
-            
-            // Store all reports for filtering
-            window.allReports = reports;
-            
-            loadingState.style.display = 'none';
-            
-            if (reports.length === 0) {
+            if (filteredReports.length === 0) {
                 emptyState.style.display = 'block';
             } else {
-                reports.forEach(report => {
+                emptyState.style.display = 'none';
+                filteredReports.forEach(report => {
                     reportsGrid.appendChild(createReportCard(report));
                 });
             }
-        } catch (error) {
-            console.log('Reports not available', error);
-            loadingState.style.display = 'none';
-            emptyState.style.display = 'block';
         }
-    }
 
-    // Event listeners
-    document.addEventListener('DOMContentLoaded', function() {
-        loadReports();
-        
-        // Search and filter
-        document.getElementById('search-reports').addEventListener('input', filterReports);
-        document.getElementById('executor-filter').addEventListener('change', filterReports);
-        
-        // Modal close
-        document.getElementById('modal-close').addEventListener('click', closeModal);
-        document.getElementById('report-modal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-        
-        // Escape key to close modal
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeModal();
-        });
-        
-        // Handle URL hash for direct report viewing
-        if (window.location.hash) {
-            const reportId = window.location.hash.substring(1);
-            if (reportId) {
-                // Wait for reports to load, then open the modal
-                setTimeout(() => {
-                    const report = window.allReports?.find(r => r.id === reportId);
-                    if (report) {
-                        openReportModal(report);
-                    }
-                }, 1000);
+        // Load reports
+        async function loadReports() {
+            const loadingState = document.getElementById('loading-state');
+            const reportsGrid = document.getElementById('reports-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            try {
+                loadingState.style.display = 'block';
+                reportsGrid.innerHTML = '';
+                emptyState.style.display = 'none';
+                
+                const response = await fetch('/reports');
+                const reports = await response.json();
+                
+                // Store all reports for filtering
+                window.allReports = reports;
+                
+                loadingState.style.display = 'none';
+                
+                if (reports.length === 0) {
+                    emptyState.style.display = 'block';
+                } else {
+                    reports.forEach(report => {
+                        reportsGrid.appendChild(createReportCard(report));
+                    });
+                }
+            } catch (error) {
+                console.log('Reports not available', error);
+                loadingState.style.display = 'none';
+                emptyState.style.display = 'block';
             }
         }
-    });
-</script>
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReports();
+            
+            // Search and filter
+            document.getElementById('search-reports').addEventListener('input', filterReports);
+            document.getElementById('executor-filter').addEventListener('change', filterReports);
+            
+            // Modal close
+            document.getElementById('modal-close').addEventListener('click', closeModal);
+            document.getElementById('report-modal').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+            
+            // Escape key to close modal
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+            
+            // Handle URL hash for direct report viewing
+            if (window.location.hash) {
+                const reportId = window.location.hash.substring(1);
+                if (reportId) {
+                    // Wait for reports to load, then open the modal
+                    setTimeout(() => {
+                        const report = window.allReports?.find(r => r.id === reportId);
+                        if (report) {
+                            openReportModal(report);
+                        }
+                    }, 1000);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
-
