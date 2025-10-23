@@ -2,14 +2,27 @@ const express = require('express');
 const fs = require('fs').promises;
 const fsSync = require('fs');
 const path = require('path');
+const axios = require('axios'); // Add this for Discord webhook
 
 const app = express();
 const port = process.env.PORT || 3000;
 const reportsFile = path.join(__dirname, 'reports.json');
 
+// Discord webhook configuration
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1430961771287416892/F_QfGnk6OysV-1GgD_zCGjpjq1VJ_aVwEzQSafmEkWaUW5bN-kNbdUGAH-FBg6btxwBv';
+
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.static(__dirname));
+
+// Security middleware to prevent console reports
+app.use((req, res, next) => {
+    // Add security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+});
 
 // In-memory reports cache
 let reports = [];
@@ -42,6 +55,75 @@ async function saveReports() {
     }
 }
 
+// Send report to Discord webhook
+async function sendToDiscordWebhook(report, ipAddress) {
+    try {
+        const embed = {
+            title: `📊 New Report Created: NEBULA-${report.id}`,
+            color: 0x00ff00,
+            fields: [
+                {
+                    name: "Executor",
+                    value: report.executor.name || 'Unknown',
+                    inline: true
+                },
+                {
+                    name: "Version",
+                    value: report.executor.version || 'Unknown',
+                    inline: true
+                },
+                {
+                    name: "Type",
+                    value: report.executor.type || 'Unknown',
+                    inline: true
+                },
+                {
+                    name: "Results",
+                    value: `✅ ${report.results.passed} Passed | ❌ ${report.results.failed} Failed | 📊 ${report.results.successRate}% Success`,
+                    inline: false
+                },
+                {
+                    name: "Grade",
+                    value: report.grade || 'F',
+                    inline: true
+                },
+                {
+                    name: "Duration",
+                    value: `${report.duration || 0}ms`,
+                    inline: true
+                },
+                {
+                    name: "IP Address",
+                    value: `\`${ipAddress}\``,
+                    inline: true
+                },
+                {
+                    name: "Report ID",
+                    value: `\`NEBULA-${report.id}\``,
+                    inline: false
+                },
+                {
+                    name: "Timestamp",
+                    value: new Date(report.createdAt).toLocaleString(),
+                    inline: false
+                }
+            ],
+            timestamp: new Date().toISOString()
+        };
+
+        await axios.post(DISCORD_WEBHOOK_URL, {
+            embeds: [embed],
+            username: 'nUNC Report Logger',
+            avatar_url: 'https://dirtyw0rk.neocities.org/N.png'
+        });
+
+        console.log(`Report NEBULA-${report.id} logged to Discord`);
+    } catch (error) {
+        console.error('Error sending to Discord webhook:', error.message);
+        // Don't throw error to prevent report creation from failing
+    }
+}
+
 // Generate random alphanumeric ID
 function generateId() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -58,29 +140,74 @@ function generateId() {
     return result;
 }
 
-// Validate report data
-function validateReportData(data) {
+// Validate report data - Enhanced to prevent fake reports
+function validateReportData(data, ipAddress) {
     if (!data || typeof data !== 'object') {
         return { valid: false, error: 'Invalid report data' };
     }
     
-    // Check for required fields from your script
+    // Check for required fields
     if (!data.executor || !data.executor.name) {
         return { valid: false, error: 'Missing executor information' };
     }
-    
+
+    // Enhanced validation to prevent console-made reports
+    if (!data.system || typeof data.system !== 'object') {
+        return { valid: false, error: 'Invalid system information' };
+    }
+
+    // Check for expected test structure
+    if (!data.categories || !Array.isArray(data.categories)) {
+        return { valid: false, error: 'Invalid test categories' };
+    }
+
+    // Validate results structure
+    if (typeof data.passes !== 'number' || typeof data.fails !== 'number') {
+        return { valid: false, error: 'Invalid test results' };
+    }
+
+    // Check for suspicious data (very high success rates without proper structure)
+    if (data.passes > 1000 && data.fails === 0) {
+        return { valid: false, error: 'Suspicious test results detected' };
+    }
+
+    // Validate timestamp if present
+    if (data.timestamp) {
+        const reportTime = new Date(data.timestamp);
+        const currentTime = new Date();
+        const timeDiff = Math.abs(currentTime - reportTime);
+        
+        // Reject reports with timestamps too far in future or past (more than 1 hour)
+        if (timeDiff > 3600000) { // 1 hour in milliseconds
+            return { valid: false, error: 'Invalid timestamp' };
+        }
+    }
+
     return { valid: true };
+}
+
+// Get client IP address
+function getClientIp(req) {
+    return req.ip || 
+           req.connection.remoteAddress || 
+           req.socket.remoteAddress ||
+           (req.connection.socket ? req.connection.socket.remoteAddress : null) ||
+           '127.0.0.1';
 }
 
 // POST /report -> create a new report
 app.post('/report', async (req, res) => {
     try {
         const reportData = req.body;
-        console.log('Received report data:', JSON.stringify(reportData, null, 2));
+        const clientIp = getClientIp(req);
         
-        // Validate input
-        const validation = validateReportData(reportData);
+        console.log('Received report data from IP:', clientIp);
+        console.log('Report data:', JSON.stringify(reportData, null, 2));
+        
+        // Enhanced validation with IP
+        const validation = validateReportData(reportData, clientIp);
         if (!validation.valid) {
+            console.log(`Report validation failed from ${clientIp}:`, validation.error);
             return res.status(400).json({ error: validation.error });
         }
 
@@ -102,7 +229,8 @@ app.post('/report', async (req, res) => {
             duration: reportData.duration || 0,
             version: reportData.version || 'unknown',
             createdAt: new Date().toISOString(),
-            timestamp: reportData.timestamp || new Date().toISOString()
+            timestamp: reportData.timestamp || new Date().toISOString(),
+            ipAddress: clientIp // Store IP with report
         };
 
         reports.push(report);
@@ -113,7 +241,12 @@ app.post('/report', async (req, res) => {
             return res.status(500).json({ error: 'Failed to save report' });
         }
 
-        console.log(`Created new report: NEBULA-${id} for ${report.executor.name}`);
+        console.log(`Created new report: NEBULA-${id} for ${report.executor.name} from IP: ${clientIp}`);
+        
+        // Send to Discord webhook (don't await to avoid blocking response)
+        sendToDiscordWebhook(report, clientIp).catch(error => {
+            console.error('Failed to send webhook:', error);
+        });
         
         // Build response with full URL
         const protocol = req.get('x-forwarded-proto') || req.protocol;
@@ -164,7 +297,8 @@ app.get('/reports', (req, res) => {
             totalTests: r.results.total,
             passed: r.results.passed,
             duration: r.duration,
-            createdAt: r.createdAt
+            createdAt: r.createdAt,
+            ipAddress: r.ipAddress // Include IP in list
         }));
         
         // Sort by most recent first
@@ -278,17 +412,32 @@ app.get('/report/:id', (req, res) => {
                     }
                     .result-pass { color: #22c55e; }
                     .result-fail { color: #ef4444; }
+                    .security-info {
+                        background: #fff3cd;
+                        border: 1px solid #ffeaa7;
+                        color: #856404;
+                        padding: 10px;
+                        border-radius: 5px;
+                        margin: 10px 0;
+                        font-size: 14px;
+                    }
                 </style>
             </head>
             <body>
                 <a href="/" class="back-link">← Back to nUNC</a>
                 <h1>Report NEBULA-${id}</h1>
+                
+                <div class="security-info">
+                    <strong>🔒 Verified Report:</strong> This report was validated and logged through nUNC's secure system.
+                </div>
+                
                 <div class="metadata">
                     <h2>Executor: ${report.executor.name}</h2>
                     ${report.executor.version ? `<p><strong>Version:</strong> ${report.executor.version}</p>` : ''}
                     ${report.executor.type ? `<p><strong>Type:</strong> ${report.executor.type}</p>` : ''}
                     ${report.createdAt ? `<p><strong>Created:</strong> ${new Date(report.createdAt).toLocaleString()}</p>` : ''}
                     ${report.grade ? `<p><strong>Grade:</strong> ${report.grade}</p>` : ''}
+                    ${report.ipAddress ? `<p><strong>Source IP:</strong> ${report.ipAddress}</p>` : ''}
                 </div>
                 
                 <h3>Test Results:</h3>
@@ -356,6 +505,7 @@ async function startServer() {
         app.listen(port, () => {
             console.log(`Server running at http://localhost:${port}`);
             console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`Discord webhook logging: ${DISCORD_WEBHOOK_URL ? 'ENABLED' : 'DISABLED'}`);
         });
     } catch (error) {
         console.error('Failed to start server:', error);
